@@ -17,6 +17,7 @@ class Config():
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = False
     SECURITY_TOKEN_AUTHENTICATION_HEADER = "Authentication-Token"
+    SECURITY_LOGIN_USER_TEMPLATE = "security/login_user.html"
 
 class LocalDevelopmentConfig(Config):
     """
@@ -31,10 +32,10 @@ class LocalDevelopmentConfig(Config):
     SECURITY_PASSWORD_HASH = "bcrypt" # Hashing Algorithm
     # SECURITY_PASSWORD_SALT = os.getenv("SECURITY_PASSWORD_SALT") # Used for hashing passwords
     SECURITY_PASSWORD_SALT = "hdbksbviekensk"
-    SECURITY_REGISTERABLE = True
+    SECURITY_REGISTERABLE = False
     SECURITY_SEND_REGISTER_EMAIL = False
     SECURITY_UNAUTHORIZED_VIEW = None # If one goes to an undefined url, it will through the default 404 error
-
+    
 class ProductionConfig(Config):
     """
     Class for some common configurations of the Flask App related to Production.

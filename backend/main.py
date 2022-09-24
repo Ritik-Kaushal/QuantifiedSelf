@@ -31,17 +31,6 @@ def create_app():
 
 app,api = create_app()
 
-@app.route('/')
-def home():
-    return "Home Page"
-
-
-
-@app.route('/register_user',methods=["POST"])
-def registerUser():
-    resp = register()
-    return resp
-
 @app.errorhandler(404)
 def pageNotFound(e):
     return "The url doesnot exist."
