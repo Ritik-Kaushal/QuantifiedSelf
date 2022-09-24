@@ -1,0 +1,6 @@
+flask
+flask-security-too
+flask-restful
+flask-sqlalchemy
+flask-cors
+bcrypt
