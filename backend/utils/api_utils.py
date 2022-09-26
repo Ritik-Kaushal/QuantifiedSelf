@@ -25,6 +25,10 @@ class Error(HTTPException):
 
 
 def validate(Name):
+    '''
+    Checks if a name entered is valid or not.
+    It checks if a set of not allowed characters is present in the name or not.
+    '''
     if len(Name.strip())==0:
         return False
     for char in Name:
@@ -33,17 +37,30 @@ def validate(Name):
     return True
 
 def CommaSeparated(trackerValues):
+    '''
+    Checks if the value is a comma separated string and has at least two options separated by a comma.
+    '''
     if ',' in trackerValues:
+        l = trackerValues.split(',')
+        for each in l:
+            if len(each.strip())==0:
+                return False
         return True
     return False
 
 def duplicateTracker(trackerName,user_id):
+    '''
+    Checks if a tracker for same name exists for the user or not
+    '''
     trackerObj = Tracker.query.filter_by(user_id = user_id).filter_by(tracker_name = trackerName).first()
     if trackerObj:
         return True
     return False
 
 def validate_timestamp(timestamp):
+    '''
+    Checks if the time stamp is valid or not
+    '''
     isValid = True
     try:
         year,month,day  = timestamp[0:10].split('-')
@@ -55,6 +72,10 @@ def validate_timestamp(timestamp):
     return isValid
 
 def validate_value(value,tracker_object):
+    '''
+    Different tracker can take different values. 
+    This function checks if the value valid for the given tracker or not.
+    '''
     if tracker_object.tracker_type in ["Numeric","Time Duration"]:
         for each in value:
             if not(each.isdigit() or ord(each)==ord('.')):

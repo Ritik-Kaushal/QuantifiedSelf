@@ -50,5 +50,4 @@ from api.trackerLogs import TrackerLogsAPI
 api.add_resource(TrackerLogsAPI,'/api/trackerLogs/get','/api/trackerLogs/post','/api/trackerLogs/delete','/api/trackerLogs/put')
 
 if __name__ == '__main__':
-    print(datetime.datetime.now())
     app.run()
