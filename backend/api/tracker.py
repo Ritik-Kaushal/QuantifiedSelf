@@ -1,13 +1,13 @@
 # ---------------IMPORTS---------------
 from flask_restful import Resource
-from utils.api_utils import Error,duplicateTracker,validate,CommaSeparated
+from utils.api_utils import Error,duplicateTracker,validate,CommaSeparated,lastEdited,latestValue
 from application.models import Tracker
 from database.database_config import db
 import json
 from utils.global_data import api_errors,tracker_list
 from utils.jwt_token_utils import token_required
 from flask import request,make_response
-
+import datetime
 
 # --------------Tracker API Class--------------
 class TrackerAPI(Resource):
@@ -33,8 +33,12 @@ class TrackerAPI(Resource):
                             "tracker_name":eachTracker.tracker_name, 
                             "tracker_description":eachTracker.tracker_description,
                             "tracker_type":eachTracker.tracker_type,
-                            "reqd_values" : eachTracker.reqd_values
+                            "reqd_values" : eachTracker.reqd_values,
+                            "latest_value" : None,
+                            "last_edited" : eachTracker.last_edited
                             }
+                if tempResult["last_edited"] is not None:
+                    tempResult["latest_value"] = latestValue(eachTracker,tempResult["last_edited"])
                 result.append(tempResult)
             return make_response(json.dumps(result),200)
         elif('tracker_id' in request.args):
@@ -46,8 +50,16 @@ class TrackerAPI(Resource):
                             "tracker_name":tracker_object.tracker_name, 
                             "tracker_description":tracker_object.tracker_description,
                             "tracker_type":tracker_object.tracker_type,
-                            "reqd_values" : tracker_object.reqd_values
+                            "reqd_values" : tracker_object.reqd_values,
+                            "last_edited_date" : None,
+                            "last_edited_time" : None,
+                            "reqd_values_list" : []
                             }
+                    if result["tracker_type"] == "Multiple Choice" or result["tracker_type"] == "Boolean":
+                        result["reqd_values_list"] = result["reqd_values"].split(',')
+                    if tracker_object.last_edited is not None:
+                        result["last_edited_date"] = tracker_object.last_edited[:10]
+                        result["last_edited_time"] = tracker_object.last_edited[11:]
                     return make_response(json.dumps(result),200)
                 else:
                     raise Error(status_code = 401, error_msg = api_errors["TNAV"][1], error_code = api_errors["TNAV"][0])
@@ -68,6 +80,7 @@ class TrackerAPI(Resource):
         '''
         user = kwargs['user']
         data = request.get_json()
+        print(data)
         if 'tracker_name' in data and data['tracker_name'] is not None :
             trackerName = data['tracker_name']
             if not duplicateTracker(trackerName,user.id):
@@ -76,8 +89,8 @@ class TrackerAPI(Resource):
                         trackerType = data['tracker_type']
                         if trackerType in tracker_list:  
                             trackerDescription = None
-                            if 'tracker_description' in data and data['tracker_decsription'] is not None:
-                                trackerDescription = data['tracker_decsription']  
+                            if 'tracker_description' in data and data['tracker_description'] is not None:
+                                trackerDescription = data['tracker_description']  
                             tracker_object = Tracker(tracker_name = trackerName, tracker_description = trackerDescription, tracker_type = trackerType, reqd_values = None, user_id = user.id)
                             
                             if trackerType == "Multiple Choice" :
@@ -119,7 +132,7 @@ class TrackerAPI(Resource):
         '''
         user = kwargs['user']
         data = request.get_json()
-        if 'tracker_id' in data and data['tracker_id'] is not None and len(str(data['tracker_id'].strip()))!=0:
+        if 'tracker_id' in data and data['tracker_id'] is not None and len(str(data['tracker_id']).strip())!=0:
             tracker_id = data['tracker_id']
             tracker_object = Tracker.query.filter_by(id=tracker_id).first()
             updated = []
@@ -155,9 +168,9 @@ class TrackerAPI(Resource):
                                 raise Error(status_code = 400, error_msg = api_errors["TVaNA"][1], error_code = api_errors["TVaNA"][0])
                         else:
                             raise Error(status_code = 400, error_msg = api_errors["TVaR"][1], error_code = api_errors["TVaR"][0])
-
                 db.session.commit()
-                return make_response(json.dumps(f"Updated : {updated}"),200)
+                result = {"message" : "Tracker Successfully Updated","id" : tracker_object.id}
+                return make_response(json.dumps(result),200)
             else:
                 raise Error(status_code = 400, error_msg = api_errors["TNAU"][1], error_code = api_errors["TNAU"][0])
         else:

@@ -32,17 +32,25 @@ def token_required(f):
         # jwt is passed in the request header
         if 'jwt_token' in request.headers:
             token = request.headers['jwt_token']
-        
+        print(token)
         # return 401 if token is not passed
         if not token:
-            return make_response(json.dumps('Token is missing !!!'),401)
+            error = {
+                "error_code" : "TIM",
+                "error_message" : "Token is missing !!!"
+            }
+            return make_response(json.dumps(error),401)
         try:
             # decoding the payload to fetch the stored details
             # data = jwt.decode(token, app.config['SECRET_KEY'])
             user = jwt.decode(token, secret_key,algorithms=["HS256"])
             current_user = User.query.filter_by(id = user['id']).first()
         except jwt.ExpiredSignatureError:
-            return make_response(json.dumps("Invalid Token."),400)
+            error = {
+                "error_code" : "IVT",
+                "error_message" : "Invalid Token."
+            }
+            return make_response(json.dumps(error),400)
 
         # returns the current user
         kwargs['user']=current_user

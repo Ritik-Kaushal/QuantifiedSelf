@@ -66,6 +66,7 @@ def validate_timestamp(timestamp):
         year,month,day  = timestamp[0:10].split('-')
         hours,minu,second= timestamp[11:19].split(':')
         datetime.datetime(int(year),int(month),int(day),int(hours),int(minu),int(second))
+        print(hours,minu,second,year,month,day)
     except ValueError:
         isValid = False
     
@@ -84,13 +85,38 @@ def validate_value(value,tracker_object):
                 
     elif tracker_object.tracker_type == "Multiple Choice":
         value_list = tracker_object.reqd_values.split(',')
+        for i in range(len(value_list)):
+            value_list[i]=value_list[i].strip()
         if value.strip() in value_list:
             return True
         else:
             return False
     elif tracker_object.tracker_type == "Boolean":
-        if value == "True" or value == "False":
+        if value.strip() == "True" or value.strip() == "False":
             return True
         else:
+            print(value)
             return False
 
+def lastEdited(tracker_obj):
+    log_list = tracker_obj.logs
+    lastEditedTimeStamp = None
+    for each in log_list:
+        if lastEditedTimeStamp is None:
+            lastEditedTimeStamp = each.time_stamp
+        else:
+            if lastEditedTimeStamp > each.time_stamp:
+                lastEditedTimeStamp = each.time_stamp
+    return lastEditedTimeStamp
+
+
+def latestValue(tracker_obj,time_stamp):
+    latest = None
+    log_list = tracker_obj.logs
+    for each in log_list:
+        if latest is None:
+            latest = each.value
+        else:
+            if time_stamp > each.time_stamp:
+                latest = each.value
+    return latest

@@ -1,6 +1,6 @@
 from database.database_config import db
 from flask_security import UserMixin, RoleMixin
-
+import datetime
 class Roles_Users(db.Model):
     """
     Class that defines which user has which roles associated with himself/herself.
@@ -25,6 +25,7 @@ class User(db.Model, UserMixin):
     fs_uniquifier = db.Column(db.String,unique=True,nullable=False)
     roles = db.relationship('Role',secondary='roles_users',backref=db.backref('users'))
     trackers = db.relationship('Tracker',backref='user',cascade="all,delete")
+    confirmed_at = db.Column(db.String())
 
 class Role(db.Model,RoleMixin):
     """
@@ -57,6 +58,7 @@ class Tracker(db.Model):
     tracker_type = db.Column(db.String, db.ForeignKey("trackerType.tracker_type_name"),nullable = False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"),nullable = False)
     times_edited = db.Column(db.Integer, default=0)
+    last_edited = db.Column(db.String)
     reqd_values = db.Column(db.String)
     logs = db.relationship('TrackerLogs',backref='tracker',cascade="all,delete")
 

@@ -1,4 +1,5 @@
 # ---------------IMPORTS---------------
+from sqlite3 import Timestamp
 from flask_restful import Resource
 from utils.api_utils import Error,validate_timestamp,validate_value
 from application.models import Tracker, TrackerLogs
@@ -61,13 +62,13 @@ class TrackerLogsAPI(Resource):
         '''
         user = kwargs['user']
         data = request.get_json()
-        if 'tracker_id' in data and data['tracker_id'] is not None and len(str(data['tracker_id'].strip()))!=0:
+        if 'tracker_id' in data and data['tracker_id'] is not None and len(str(data['tracker_id']).strip())!=0:
             tracker_id = data['tracker_id']
             tracker_object = Tracker.query.filter_by(id = tracker_id).first()
             if tracker_object :
                 if tracker_object.user_id == user.id :
                     time_stamp = None
-                    if 'time_stamp' in data and data['time_stamp'] is not None and len(str(data['time_stamp'].strip()))!=0:
+                    if 'time_stamp' in data and data['time_stamp'] is not None and len(str(data['time_stamp']).strip())!=0:
                         time_stamp = data['time_stamp']
                         if not validate_timestamp(time_stamp) :
                             raise Error(status_code = 400, error_msg = api_errors["TSWF"][1], error_code = api_errors["TSWF"][0])
@@ -76,17 +77,19 @@ class TrackerLogsAPI(Resource):
                     else:
                         raise Error(status_code = 400, error_msg = api_errors["TMNBN"][1], error_code = api_errors["TMNBN"][0])
 
-                    if 'value' in data and data['value'] is not None and len(str(data['value'].strip()))!=0:
+                    if 'value' in data and data['value'] is not None and len(str(data['value']).strip())!=0:
                         value = data['value']
                         if validate_value(value=value,tracker_object = tracker_object):
                             note="-"
-                            if 'note' in data and data['note'] is not None and len(str(data['note'].strip()))!=0 :
+                            if 'note' in data and data['note'] is not None and len(str(data['note']).strip())!=0 :
                                 note = data['note']
                             logObj = TrackerLogs(time_stamp = time_stamp,tracker_id = tracker_id,value = value,note = note)
                             db.session.add(logObj)
+                            tracker_object.last_edited=time_stamp
+                            tracker_object.times_edited+=1
                             db.session.commit()
 
-                            return make_response(json.dumps({"message" : "Successfully Added the log."}),200)
+                            return make_response(json.dumps({"message" : "Successfully Added the log.", "id":logObj.id}),200)
                         else:
                             raise Error(status_code = 400, error_msg = api_errors["TVW"][1], error_code = api_errors["TVW"][0])
                     else:
@@ -112,7 +115,7 @@ class TrackerLogsAPI(Resource):
         '''
         user = kwargs['user']
         data = request.get_json()
-        if 'log_id' in data and data['log_id'] is not None and len(str(data['log_id'].strip()))!=0:
+        if 'log_id' in data and data['log_id'] is not None and len(str(data['log_id']).strip())!=0:
             log_id = data['log_id']
             logObj = TrackerLogs.query.filter_by(id=log_id).first()
             updated = []
@@ -125,6 +128,8 @@ class TrackerLogsAPI(Resource):
                         if time_stamp != logObj.time_stamp:
                             if validate_timestamp(time_stamp) :
                                 logObj.time_stamp = time_stamp
+                                if logObj.tracker.last_edited < time_stamp:
+                                    logObj.tracker.last_edited = time_stamp
                                 updated.append("Time stamp")
                             else:
                                 raise Error(status_code = 400, error_msg = api_errors["TSWF"][1], error_code = api_errors["TSWF"][0])
@@ -132,7 +137,7 @@ class TrackerLogsAPI(Resource):
                         raise Error(status_code = 400, error_msg = api_errors["TMNBN"][1], error_code = api_errors["TMNBN"][0])
                 
                 # Checks for value and updates if required
-                if 'value' in data and data['value'] is not None and len(str(data['value'].strip()))!=0:
+                if 'value' in data and data['value'] is not None and len(str(data['value']).strip())!=0:
                     value = data['value']
                     if value != logObj.value:
                         if validate_value(value=value,tracker_object = logObj.tracker):
@@ -149,7 +154,10 @@ class TrackerLogsAPI(Resource):
                     if note != logObj.note:
                         logObj.note = note
                         updated.append("Note")
+                if(len(updated)!=0):
+                    logObj.tracker.times_edited+=1
                 db.session.commit()
+
                 return make_response(json.dumps(f"Updated : {updated}"),200)
             else:
                 raise Error(status_code = 400, error_msg = api_errors["TLNAU"][1], error_code = api_errors["TLNAU"][0])
