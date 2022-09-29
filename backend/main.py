@@ -8,40 +8,43 @@ from application.models import User, Role
 from flask_cors import CORS
 from database.database_config import db
 from flask_restful import Api
-from utils.overridden.register import register
 from utils.overridden.forms import ExtendedRegisterForm
-import datetime
-from flask_mail import Mail,Message
+from flask_mail import Mail
+from database.cache import cache
 
 # --------------- Setting up the flask app --------------- #
 def create_app():
     app = Flask(__name__)
-    
     if(os.getenv("ENV","development")=="production"):
         print("----- Starting the production development -----")
         app.config.from_object(ProductionConfig) # Configures the ProductionConfig data with the app
     else:
         print("----- Starting the local development -----")
         app.config.from_object(LocalDevelopmentConfig) # Configures the LocalDevelopmentConfig data with the app
+
     db.init_app(app) # A way to safely bind database handler to flask and manage connections
     api = Api(app)
+    cache.init_app(app)
     CORS(app)
     user_datastore = SQLAlchemySessionUserDatastore(db.session,User,Role)
     security = Security(app,user_datastore,register_form=ExtendedRegisterForm)
     mail= Mail(app)
     app.app_context().push()
-    return (app,api,mail)
+    return (app,api,mail,cache)
 
-app,api,mail = create_app()
+app,api,mail,cache = create_app()
 
+# @app.route("/")
+# def index():
+#     from utils.mail_sender.report_mail import sendMail
+#     sendMail('emailinflaskbyritik@gmail.com','ritikkaushallvb@gmail.com',"Testing from function",'Hello This is a testing mail','report.pdf')
 
+#     return "done"
 
-@app.route("/")
-def index():
-    from utils.mail_sender.report_mail import sendMail
-    sendMail('emailinflaskbyritik@gmail.com','ritikkaushallvb@gmail.com',"Testing from function",'Hello This is a testing mail','report.pdf')
-
-    return "done"
+# @app.route('/')
+# @cache.cached(key_prefix='home')
+# def index():
+#     return 'Hello'
 
 @app.errorhandler(404)
 def pageNotFound(e):
@@ -66,6 +69,9 @@ api.add_resource(TokenValidationAPI,'/api/tokenValidation/get')
 
 from api.data_summary import DataSummaryAPI
 api.add_resource(DataSummaryAPI,'/api/dataSummary/get')
+
+
+
 
 
 if __name__ == '__main__':

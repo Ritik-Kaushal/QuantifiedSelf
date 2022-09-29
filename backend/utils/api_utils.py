@@ -5,6 +5,7 @@ from flask import make_response
 from utils.global_data import notAllowedCharacters
 from application.models import Tracker
 import datetime
+from database.cache import cache
 
 # -------------- Error Class -------------- #
 
@@ -120,3 +121,9 @@ def latestValue(tracker_obj,time_stamp):
             if time_stamp > each.time_stamp:
                 latest = each.value
     return latest
+
+def delete_cache(key):
+    cache.delete(key)
+
+
+

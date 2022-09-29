@@ -9,6 +9,9 @@ from utils.global_data import api_errors
 from utils.jwt_token_utils import token_required
 from flask import request,make_response
 import datetime
+from utils.api_cache import getLogs
+from database.cache import cache
+from utils.api_utils import delete_cache
 
 # --------------Tracker Logs API Class--------------
 class TrackerLogsAPI(Resource):
@@ -28,18 +31,19 @@ class TrackerLogsAPI(Resource):
             raise Error(status_code = 400, error_msg = api_errors["QSCBE"][1], error_code = api_errors["QSCBE"][0])
         elif('tracker_id' in request.args):
             tracker_id = str(request.args['tracker_id'])
+
+            key = "getLogs"+str(user.id)+tracker_id
+
             tracker_object = Tracker.query.filter_by(id = tracker_id).first()
             if tracker_object:
                 if tracker_object.user_id == user.id:
-                    reqd_logs = tracker_object.logs
-                    logs_list = []
-                    for eachLog in reqd_logs:
-                        result = {"id":eachLog.id,
-                                "time_stamp":eachLog.time_stamp, 
-                                "value":eachLog.value,
-                                "note":eachLog.note
-                                }
-                        logs_list.append(result)
+                    logs_list = None
+                    if(cache.has(key)):
+                        print("From cache")
+                        logs_list = cache.get(key)
+                    else:
+                        logs_list = getLogs(tracker_object,key)
+
                     return make_response(json.dumps(logs_list),200)
                 else:
                     raise Error(status_code = 401, error_msg = api_errors["TNAV"][1], error_code = api_errors["TNAV"][0])
@@ -88,6 +92,9 @@ class TrackerLogsAPI(Resource):
                             tracker_object.last_edited=time_stamp
                             tracker_object.times_edited+=1
                             db.session.commit()
+
+                            key = "getLogs"+str(user.id)+tracker_id
+                            delete_cache(key)
 
                             return make_response(json.dumps({"message" : "Successfully Added the log.", "id":logObj.id}),200)
                         else:
@@ -158,6 +165,9 @@ class TrackerLogsAPI(Resource):
                     logObj.tracker.times_edited+=1
                 db.session.commit()
 
+                key = "getLogs"+str(user.id)+str(logObj.tracker.id)
+                delete_cache(key)
+
                 return make_response(json.dumps(f"Updated : {updated}"),200)
             else:
                 raise Error(status_code = 400, error_msg = api_errors["TLNAU"][1], error_code = api_errors["TLNAU"][0])
@@ -178,9 +188,13 @@ class TrackerLogsAPI(Resource):
                 log_id = request.args["log_id"]
                 log_object = TrackerLogs.query.filter_by(id=log_id).first()
                 if log_object :
+                    tracker_id = str(log_object.tracker.id)
                     if log_object.tracker.user_id == user.id:
                         db.session.delete(log_object)
                         db.session.commit()
+
+                        key = "getLogs"+str(user.id)+tracker_id
+                        delete_cache(key)
                         return make_response(json.dumps('Successfully Deleted'),200)
                     else:
                         raise Error(status_code = 400, error_msg = api_errors["TLNAD"][1], error_code = api_errors["TLNAD"][0])

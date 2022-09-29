@@ -52,9 +52,9 @@ class LocalDevelopmentConfig(Config):
 
     ##### Flask Caching Config #####
     CACHE_TYPE = 'RedisCache'
-    CACHE_REDIS_URL = 'redis://localhost:6379'
+    CACHE_REDIS_URL = 'redis://localhost:6379/0'
     CACHE_DEFAULT_TIMEOUT = 86400 # 1day default timeout
-    CACHE_KEY_PREFIX = 'Track_it'
+    CACHE_KEY_PREFIX = 'Track_it-'
 
     
     

@@ -8,7 +8,9 @@ from utils.global_data import api_errors,tracker_list
 from utils.jwt_token_utils import token_required
 from flask import request,make_response
 import datetime
-
+from utils.api_cache import getAllTrackerDetails,getATrackerDetails
+from database.cache import cache
+from utils.api_utils import delete_cache
 # --------------Tracker API Class--------------
 class TrackerAPI(Resource):
     '''
@@ -26,40 +28,27 @@ class TrackerAPI(Resource):
         '''
         user = kwargs['user']
         if len(request.query_string)==0:
-            tracker_object_list = user.trackers
-            result=[]
-            for eachTracker in tracker_object_list:
-                tempResult = {"id":eachTracker.id,
-                            "tracker_name":eachTracker.tracker_name, 
-                            "tracker_description":eachTracker.tracker_description,
-                            "tracker_type":eachTracker.tracker_type,
-                            "reqd_values" : eachTracker.reqd_values,
-                            "latest_value" : None,
-                            "last_edited" : eachTracker.last_edited
-                            }
-                if tempResult["last_edited"] is not None:
-                    tempResult["latest_value"] = latestValue(eachTracker,tempResult["last_edited"])
-                result.append(tempResult)
+            key = "getAllTrackerDetails"+str(user.id)
+            result = None
+            if(cache.has(key)):
+                print("From cache")
+                result = cache.get(key)
+            else:
+                result = getAllTrackerDetails(user,key)
             return make_response(json.dumps(result),200)
+
         elif('tracker_id' in request.args):
             tracker_id = str(request.args['tracker_id'])
+            key = "getOneTrackerDetail"+str(user.id)+tracker_id
             tracker_object = Tracker.query.filter_by(id = tracker_id).first()
             if tracker_object:
                 if tracker_object.user_id == user.id:
-                    result = {"id":tracker_object.id,
-                            "tracker_name":tracker_object.tracker_name, 
-                            "tracker_description":tracker_object.tracker_description,
-                            "tracker_type":tracker_object.tracker_type,
-                            "reqd_values" : tracker_object.reqd_values,
-                            "last_edited_date" : None,
-                            "last_edited_time" : None,
-                            "reqd_values_list" : []
-                            }
-                    if result["tracker_type"] == "Multiple Choice" or result["tracker_type"] == "Boolean":
-                        result["reqd_values_list"] = result["reqd_values"].split(',')
-                    if tracker_object.last_edited is not None:
-                        result["last_edited_date"] = tracker_object.last_edited[:10]
-                        result["last_edited_time"] = tracker_object.last_edited[11:]
+                    result = None
+                    if(cache.has(key)):
+                        print("From cache")
+                        result = cache.get(key)
+                    else:
+                        result = getATrackerDetails(tracker_object,key)
                     return make_response(json.dumps(result),200)
                 else:
                     raise Error(status_code = 401, error_msg = api_errors["TNAV"][1], error_code = api_errors["TNAV"][0])
@@ -106,6 +95,10 @@ class TrackerAPI(Resource):
                                 tracker_object.reqd_values = "True, False"      
                             db.session.add(tracker_object)
                             db.session.commit()
+
+                            # When a new tracker is added, get all tracker cache has to be deleted. 
+                            key = "getAllTrackerDetails"+str(user.id)
+                            delete_cache(key)
                             
                             result = {"message" : "Tracker Successfully added","id" : tracker_object.id}
                             return make_response(json.dumps(result),200) 
@@ -133,7 +126,7 @@ class TrackerAPI(Resource):
         user = kwargs['user']
         data = request.get_json()
         if 'tracker_id' in data and data['tracker_id'] is not None and len(str(data['tracker_id']).strip())!=0:
-            tracker_id = data['tracker_id']
+            tracker_id = str(data['tracker_id'])
             tracker_object = Tracker.query.filter_by(id=tracker_id).first()
             updated = []
             if tracker_object.user_id == user.id :
@@ -169,6 +162,14 @@ class TrackerAPI(Resource):
                         else:
                             raise Error(status_code = 400, error_msg = api_errors["TVaR"][1], error_code = api_errors["TVaR"][0])
                 db.session.commit()
+
+                # When a tracker is edited, get all tracker cache as well as get one tracker cache has to be deleted. 
+                key1 = "getAllTrackerDetails"+str(user.id)
+                delete_cache(key1)
+
+                key2 = "getOneTrackerDetail"+str(user.id)+tracker_id
+                delete_cache(key2)
+
                 result = {"message" : "Tracker Successfully Updated","id" : tracker_object.id}
                 return make_response(json.dumps(result),200)
             else:
@@ -185,12 +186,20 @@ class TrackerAPI(Resource):
         user = kwargs['user']
         if len(request.query_string)!=0:
             if('tracker_id' in request.args):
-                tracker_id = request.args["tracker_id"]
+                tracker_id = str(request.args["tracker_id"])
                 tracker_object = Tracker.query.filter_by(id=tracker_id).first()
                 if tracker_object :
                     if tracker_object.user_id == user.id:
                         db.session.delete(tracker_object)
                         db.session.commit()
+
+                        # When a tracker is deleted, get all tracker cache as well as get one tracker cache has to be deleted. 
+                        key1 = "getAllTrackerDetails"+str(user.id)
+                        delete_cache(key1)
+
+                        key2 = "getOneTrackerDetail"+str(user.id)+tracker_id
+                        delete_cache(key2)
+
                         return make_response(json.dumps('Successfully Deleted'),200)
                     else:
                         raise Error(status_code = 400, error_msg = api_errors["TNAD"][1], error_code = api_errors["TNAD"][0])
