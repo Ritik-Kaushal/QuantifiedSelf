@@ -29,59 +29,9 @@
         </button>
         <!-- offcanvas trigger -->
 
-        <a class="navbar-brand fw-bold text-uppercase me-auto" href="/"
-          >Track It</a
+        <router-link class="navbar-brand fw-bold text-uppercase me-auto" to="/"
+          >Track It</router-link
         >
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto my-2 my-lg-0">
-            <div class="dropdown">
-              <a
-                class="btn btn-secondary dropdown-toggle"
-                href="#"
-                role="button"
-                id="dropdownMenuLink"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-person-circle"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                  <path
-                    fill-rule="evenodd"
-                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
-                  />
-                </svg>
-              </a>
-
-              <ul
-                class="dropdown-menu dropdown-menu-end"
-                aria-labelledby="dropdownMenuLink"
-              >
-                <li>
-                  <a class="dropdown-item" href="/edit_profile">Edit Profile</a>
-                </li>
-                <li><a class="dropdown-item" href="/logout">Logout</a></li>
-              </ul>
-            </div>
-          </ul>
-        </div>
       </div>
     </nav>
     <!-- Nav Bar-->
@@ -102,7 +52,7 @@
               </div>
             </li>
             <li>
-              <a href="/" class="nav-link px-3">
+              <router-link to="/" class="nav-link px-3">
                 <span class="me-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -118,13 +68,15 @@
                   </svg>
                 </span>
                 <span>Go Home</span>
-              </a>
+              </router-link>
             </li>
             <li>
               <router-link
                 to="/dashboard/summary"
                 class="nav-link px-3"
-                v-bind:class="{ active: this.$store.state.active_id[0] }"
+                v-bind:class="{
+                  active: this.$store.state.summary_store.active_id[0],
+                }"
               >
                 <span class="me-2">
                   <svg
@@ -161,7 +113,9 @@
               <router-link
                 to="/dashboard/trackers"
                 class="nav-link px-3"
-                v-bind:class="{ active: this.$store.state.active_id[1] }"
+                v-bind:class="{
+                  active: this.$store.state.summary_store.active_id[1],
+                }"
               >
                 <span class="me-2">
                   <svg
@@ -184,7 +138,9 @@
               <router-link
                 to="/dashboard/trackersLogs"
                 class="nav-link px-3"
-                v-bind:class="{ active: this.$store.state.active_id[2] }"
+                v-bind:class="{
+                  active: this.$store.state.summary_store.active_id[2],
+                }"
                 ><span class="me-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -203,8 +159,108 @@
                 <span>View Logs</span></router-link
               >
             </li>
+
+            <li class="my-4">
+              <hr class="dropdown-divider" />
+            </li>
+
+            <li>
+              <div class="text-muted small fw-bold text-uppercase px-3">
+                Import/Export
+              </div>
+            </li>
+
+            <li>
+              <router-link
+                to="#"
+                @click.native="Export($event)"
+                class="nav-link px-3"
+                type="button"
+                id="export_nav"
+                v-bind:class="{
+                  active: this.$store.state.summary_store.active_id[3],
+                }"
+                ><span class="me-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-box-arrow-in-right"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0v-2z"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"
+                    />
+                  </svg>
+                </span>
+                <span>Export your data</span></router-link
+              >
+            </li>
+
+            <li class="my-4">
+              <hr class="dropdown-divider" />
+            </li>
+
+            <li>
+              <div class="text-muted small fw-bold text-uppercase px-3">
+                Settings
+              </div>
+            </li>
+            <li>
+              <router-link
+                to="/logout"
+                class="nav-link px-3"
+                v-bind:class="{
+                  active: this.$store.state.summary_store.active_id[4],
+                }"
+                ><span class="me-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-power"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M7.5 1v7h1V1h-1z" />
+                    <path
+                      d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"
+                    />
+                  </svg>
+                </span>
+                <span>Logout</span></router-link
+              >
+            </li>
           </ul>
         </nav>
+        <!-- Toast -->
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+          <div class="toast-container">
+            <div
+              class="toast"
+              role="alert"
+              aria-live="assertive"
+              aria-atomic="true"
+            >
+              <div class="toast-header bg-warning">
+                <strong class="me-auto">{{ toast_message }}</strong>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="toast"
+                  aria-label="Close"
+                ></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Toast -->
       </div>
     </div>
     <!-- Off Canvas -->
@@ -212,8 +268,51 @@
 </template>
 
 <script>
+import FetchFunction from "@/utils";
 export default {
   name: "DashboardNavBar",
+  data() {
+    return {
+      export_disabled: false,
+      toast_message: "",
+    };
+  },
+  methods: {
+    async Export(e) {
+      e.preventDefault();
+      if (!this.export_disabled) {
+        this.toast_message =
+          "Exporting your data. Please  wait... You will be alerted once it is done.";
+        $(".toast").toast("show");
+        this.export_disabled = true;
+        let url = "http://localhost:5000/api/exportData";
+        let res = FetchFunction({
+          url: url,
+          authRequired: true,
+        })
+          .then((d) => {
+            this.toast_message = d.message;
+            this.export_disabled = false;
+            $(".toast").toast("show");
+          })
+          .catch((e) => {
+            const err = JSON.parse(e.message);
+            this.toast_message = err.message;
+            this.export_disabled = false;
+            $(".toast").toast("show");
+
+            if (err.error_code == "TIM" || err.error_code == "IVT") {
+              this.$store.dispatch("logoutUser");
+            }
+          })
+          .catch((e) => {
+            this.toast_message = "Something went wrong. Please try again";
+            this.export_disabled = false;
+            $(".toast").toast("show");
+          });
+      }
+    },
+  },
 };
 </script>
 

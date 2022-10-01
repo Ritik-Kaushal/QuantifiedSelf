@@ -27,7 +27,7 @@
           </div>
           <div class="card-body">
             <h5 class="card-body float-middle">
-              {{ input_dict["tracker_count"] }}
+              {{ $store.getters.get_card_data.tracker_count }}
             </h5>
           </div>
         </div>
@@ -62,7 +62,7 @@
           </div>
           <div class="card-body">
             <h5 class="card-body float-middle">
-              {{ input_dict["count_edited"] }}
+              {{ $store.getters.get_card_data.count_edited }}
             </h5>
           </div>
         </div>
@@ -98,11 +98,11 @@
           <div class="card-body">
             <h5 class="card-title float-middle">
               <span class="fw-bold">Date :&nbsp;</span
-              >{{ input_dict["last_edited_date"] }}
+              >{{ $store.getters.get_card_data.last_edited_date }}
             </h5>
             <h5 class="card-title float-middle">
               <span class="fw-bold">Time :&nbsp;</span
-              >{{ input_dict["last_edited_time"] }}
+              >{{ $store.getters.get_card_data.last_edited_time }}
             </h5>
           </div>
         </div>
@@ -115,7 +115,6 @@
 <script>
     export default{
         name:'SummaryCards',
-        props:['input_dict'],
     }
 </script>
 

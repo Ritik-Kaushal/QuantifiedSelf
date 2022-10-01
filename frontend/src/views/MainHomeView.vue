@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TopNavBar />
+    <TopNavBar :key="this.$store.state.user_store.loggedIn" />
     <router-view />
   </div>
 </template>

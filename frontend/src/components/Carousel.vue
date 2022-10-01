@@ -8,7 +8,7 @@
       <div class="carousel-inner">
         <div class="carousel-item active">
           <img
-            src="@/assets/homepage/home_carousel_1.png"
+            src="@/assets/homepage/home_carousel_1.jpg"
             class="d-block"
             :style="{ width: this.$store.getters.get_carousel_width + '%' }"
             alt="..."
@@ -16,7 +16,7 @@
         </div>
         <div class="carousel-item">
           <img
-            src="@/assets/homepage/home_carousel_2.png"
+            src="@/assets/homepage/home_carousel_2.jpg"
             class="d-block"
             :style="{ width: this.$store.getters.get_carousel_width + '%' }"
             alt="..."
@@ -24,7 +24,7 @@
         </div>
         <div class="carousel-item">
           <img
-            src="@/assets/homepage/home_carousel_3.png"
+            src="@/assets/homepage/home_carousel_3.jpg"
             class="d-block"
             :style="{ width: this.$store.getters.get_carousel_width + '%' }"
             alt="..."
@@ -32,7 +32,7 @@
         </div>
         <div class="carousel-item">
           <img
-            src="@/assets/homepage/home_carousel_4.png"
+            src="@/assets/homepage/home_carousel_4.jpg"
             class="d-block"
             :style="{ width: this.$store.getters.get_carousel_width + '%' }"
             alt="..."
@@ -40,7 +40,7 @@
         </div>
         <div class="carousel-item">
           <img
-            src="@/assets/homepage/home_carousel_5.png"
+            src="@/assets/homepage/home_carousel_5.jpg"
             class="d-block"
             :style="{ width: this.$store.getters.get_carousel_width + '%' }"
             alt="..."
@@ -48,7 +48,7 @@
         </div>
         <div class="carousel-item">
           <img
-            src="@/assets/homepage/home_carousel_6.png"
+            src="@/assets/homepage/home_carousel_6.jpg"
             class="d-block"
             :style="{ width: this.$store.getters.get_carousel_width + '%' }"
             alt="..."
@@ -56,7 +56,7 @@
         </div>
         <div class="carousel-item">
           <img
-            src="@/assets/homepage/home_carousel_7.png"
+            src="@/assets/homepage/home_carousel_7.jpg"
             class="d-block"
             :style="{ width: this.$store.getters.get_carousel_width + '%' }"
             alt="..."
@@ -64,7 +64,7 @@
         </div>
         <div class="carousel-item">
           <img
-            src="@/assets/homepage/home_carousel_8.png"
+            src="@/assets/homepage/home_carousel_8.jpg"
             class="d-block"
             :style="{ width: this.$store.getters.get_carousel_width + '%' }"
             alt="..."
@@ -72,7 +72,7 @@
         </div>
         <div class="carousel-item">
           <img
-            src="@/assets/homepage/home_carousel_9.png"
+            src="@/assets/homepage/home_carousel_9.jpg"
             class="d-block"
             :style="{ width: this.$store.getters.get_carousel_width + '%' }"
             alt="..."
@@ -80,7 +80,7 @@
         </div>
         <div class="carousel-item">
           <img
-            src="@/assets/homepage/home_carousel_10.png"
+            src="@/assets/homepage/home_carousel_10.jpg"
             class="d-block"
             :style="{ width: this.$store.getters.get_carousel_width + '%' }"
             alt="..."
@@ -88,7 +88,7 @@
         </div>
         <div class="carousel-item">
           <img
-            src="@/assets/homepage/home_carousel_11.png"
+            src="@/assets/homepage/home_carousel_11.jpg"
             class="d-block"
             :style="{ width: this.$store.getters.get_carousel_width + '%' }"
             alt="..."

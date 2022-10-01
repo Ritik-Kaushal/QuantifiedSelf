@@ -8,7 +8,7 @@ const routes = [
     path: '/',
     redirect : 'home',
     name: 'Main',
-    component: () => import( '../views/MainView.vue'),
+    component: () => import( '../views/MainHomeView.vue'),
     children : [
       {
         path: 'home',
@@ -21,6 +21,10 @@ const routes = [
           {
             path: 'register',
             component: () => import( '../components/Register.vue'),
+          },
+          {
+            path: 'reset',
+            component: () => import( '../components/forgot_password.vue'),
           }
         ]
       },
@@ -38,22 +42,34 @@ const routes = [
     path: '/dashboard',
     redirect : '/dashboard/summary',
     name: 'Dashboard',
-    component : () => import('../views/DashboardView.vue'),
+    component : () => import('../views/MainDashboardView.vue'),
     children : [
       {
         path : 'summary',
-        component: () => import( '../components/Summary.vue'),
+        component: () => import( '../views/Summary.vue'),
       },
       {
         path : 'trackers',
-        component: () => import( '../components/Trackers.vue'),
+        component: () => import( '../views/Trackers.vue'),
       },
       {
         path : 'trackersLogs',
-        component: () => import( '../components/TrackersLogs.vue'),
+        component: () => import( '../views/TrackersLogs.vue'),
       },
+      {
+        path : 'updateDetails',
+        component : () => import('../views/UpdateDetails.vue')
+    
+      }
     ],
-  }
+  },
+  {
+    path : '/logout',
+    name : "Logout",
+    component : ()=> import('../components/Logout.vue'),
+  },
+  
+
 ]
 
 const router = new VueRouter({

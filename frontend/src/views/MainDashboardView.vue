@@ -1,17 +1,28 @@
 <template>
   <div >
-    <DashboardNavbar />
-    <router-view class="router-view-div" />
+      <DashboardNavbar />
+      <router-view class="router-view-div" />
+    
   </div>
 </template>
 
 <script>
+import validateToken from "@/utils/validateToken";
 import DashboardNavbar from "@/components/Dashboard-navbar.vue";
+
 export default {
   name: "DashboardView",
   components: {
     DashboardNavbar,
   },
+  mounted(){
+    if(this.$store.getters.get_login_status && validateToken()){
+      this.$store.dispatch("getTrackers");
+    }
+    else{
+      this.$store.dispatch("logoutUser");
+    }
+  }
 };
 </script>
 

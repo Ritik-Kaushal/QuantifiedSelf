@@ -1,36 +1,21 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex from "vuex";
+import user_store from "./user_store";
+import summary_store from "./summary_store";
+import home_store from "./home_store";
+import tracker_store from "./tracker_store"
+import tracker_logs_store from "./tracker_logs_store";
+import chart_store from "./chart_store";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-    carousel_width:100,
-    active_id : [1,0,0], //index 0-> dashboard, 1->tracker, 2->logs 
-  },
-  getters: {
-    get_carousel_width(state){
-      return (state.carousel_width)
-    }
-  },
-  mutations: {
-    addClass(){
-      const element = document.getElementById("main-div");
-      element.classList.remove("custom-container");
-      void element.offsetWidth;
-      element.classList.add("custom-container");
-    },
-    remClass(){
-      const element = document.getElementById("main-div");
-      element.classList.remove("custom-container");
-    },
-    change_active(state,id){
-      state.active_id = [0,0,0];
-      state.active_id[id] = 1;
-    }
-  },
-  actions: {
-  },
   modules: {
-  }
-})
+    user_store: user_store,
+    home_store: home_store,
+    summary_store: summary_store,
+    tracker_store : tracker_store,
+    tracker_logs_store : tracker_logs_store,
+    chart_store : chart_store
+  },
+});

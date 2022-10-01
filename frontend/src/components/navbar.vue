@@ -121,19 +121,26 @@
 </template>
 
 <script>
+import validateToken from "../utils/validateToken";
 export default {
   name: "TopNavBar",
   mounted() {
-    if (
-      window.location.pathname === "/home/login" ||
-      window.location.pathname === "/home/register"
-    ) {
-      this.addClass();
+    if(validateToken()){
+      if (
+        window.location.pathname === "/home/login" ||
+        window.location.pathname === "/home/register"
+      ) {
+        this.addClass();
+      }
     }
+    else{
+      this.$store.dispatch('logoutUser');
+    }
+    
   },
   data() {
     return {
-      loggedIn: true,
+      loggedIn: this.$store.state.user_store.loggedIn,
     };
   },
   methods: {
@@ -145,11 +152,11 @@ export default {
     },
     reset() {
       this.closeToggle();
-      this.$store.commit("remClass");
+      this.$store.dispatch("remClass");
     },
     addClass() {
       this.closeToggle();
-      this.$store.commit("addClass");
+      this.$store.dispatch("addClass");
     },
   },
 };
