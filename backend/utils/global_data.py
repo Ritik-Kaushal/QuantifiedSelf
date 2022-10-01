@@ -5,9 +5,11 @@ api_errors = {
     'QSCBE' : ["COMMON003", "Query String cannot be empty"],
 
     # Login API
-    'INVPASS' : "Invalid Password",
-    'MIDET' : "Missing Details",
-    'USRNF' : "User not found",
+
+    'INVPASS' : ["LOGIN000","Invalid Password"],
+    'MIDET' : ["LOGIN001","Missing Details"],
+    'USRNF' : ["LOGIN002","Specific user does not exist"],
+    'USRNCon' : ["LOGIN003","Email requires confirmation."],
 
     # Tracker API
     "TNF" : ["TRACKER000", "Tracker not found for this tracker id"],

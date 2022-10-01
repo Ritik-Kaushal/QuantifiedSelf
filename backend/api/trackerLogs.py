@@ -93,7 +93,7 @@ class TrackerLogsAPI(Resource):
                             tracker_object.times_edited+=1
                             db.session.commit()
 
-                            key = "getLogs"+str(user.id)+tracker_id
+                            key = "getLogs"+str(user.id)+str(tracker_id)
                             delete_cache(key)
 
                             return make_response(json.dumps({"message" : "Successfully Added the log.", "id":logObj.id}),200)

@@ -7,3 +7,4 @@ bcrypt
 flask-mail
 flask-caching
 redis
+celery

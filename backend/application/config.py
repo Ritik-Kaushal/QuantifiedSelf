@@ -41,6 +41,8 @@ class LocalDevelopmentConfig(Config):
     SECURITY_UNAUTHORIZED_VIEW = None # If one goes to an undefined url, it will through the default 404 error
     SECURITY_CONFIRMABLE = True
     SECURITY_AUTO_LOGIN_AFTER_CONFIRM = False
+    SECURITY_RECOVERABLE = True
+    SECURITY_POST_RESET_VIEW = '/recovered'
 
     ##### Flask Mail Config #####
     MAIL_SERVER = 'smtp.gmail.com'
@@ -53,8 +55,14 @@ class LocalDevelopmentConfig(Config):
     ##### Flask Caching Config #####
     CACHE_TYPE = 'RedisCache'
     CACHE_REDIS_URL = 'redis://localhost:6379/0'
-    CACHE_DEFAULT_TIMEOUT = 86400 # 1day default timeout
+    CACHE_DEFAULT_TIMEOUT = 300 # 5 min default timeout
     CACHE_KEY_PREFIX = 'Track_it-'
+
+    ##### Celery Config #####
+    BROKER = "redis://localhost:6379/0"
+    BACKEND = "redis://localhost:6379/0"
+    ENABLE_UTC = False
+    TIMEZONE = "Asia/Calcutta"
 
     
     

@@ -1,26 +1,39 @@
 # -------------- IMPORTING THE REQUIRED MODULES --------------- #
 import os
-from flask import request
-from flask import Flask
 from application.config import *
+from database.database_config import db
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from application.models import User, Role
 from flask_cors import CORS
-from database.database_config import db
 from flask_restful import Api
 from utils.overridden.forms import ExtendedRegisterForm
-from flask_mail import Mail
 from database.cache import cache
+from database.celery import cel
+from database.create_app import app
+from database.mail_create import mail
 
 # --------------- Setting up the flask app --------------- #
 def create_app():
-    app = Flask(__name__)
     if(os.getenv("ENV","development")=="production"):
         print("----- Starting the production development -----")
         app.config.from_object(ProductionConfig) # Configures the ProductionConfig data with the app
     else:
         print("----- Starting the local development -----")
         app.config.from_object(LocalDevelopmentConfig) # Configures the LocalDevelopmentConfig data with the app
+    
+    # Configuring Celery
+    cel.conf.broker_url = app.config["BROKER"]
+    cel.conf.result_backend = app.config["BACKEND"]
+    cel.conf.enable_utc = app.config["ENABLE_UTC"]
+    cel.conf.timezone = app.config["TIMEZONE"]
+
+    class ContextTask(cel.Task):
+        def __call__(self,*args,**kwargs):
+            with app.app_context():
+                return self.run(*args,**kwargs)
+
+    cel.Task = ContextTask
+
 
     db.init_app(app) # A way to safely bind database handler to flask and manage connections
     api = Api(app)
@@ -28,29 +41,19 @@ def create_app():
     CORS(app)
     user_datastore = SQLAlchemySessionUserDatastore(db.session,User,Role)
     security = Security(app,user_datastore,register_form=ExtendedRegisterForm)
-    mail= Mail(app)
+    mail.init_app(app)
     app.app_context().push()
-    return (app,api,mail,cache)
+    return (app,api,mail,cache,cel)
 
-app,api,mail,cache = create_app()
+app,api,mail,cache,cel = create_app()
 
-# @app.route("/")
-# def index():
-#     from utils.mail_sender.report_mail import sendMail
-#     sendMail('emailinflaskbyritik@gmail.com','ritikkaushallvb@gmail.com',"Testing from function",'Hello This is a testing mail','report.pdf')
-
-#     return "done"
-
-# @app.route('/')
-# @cache.cached(key_prefix='home')
-# def index():
-#     return 'Hello'
+@app.route('/recovered')
+def post_recovery():
+    return "Successfully Recovered. Close this tab and login again."
 
 @app.errorhandler(404)
 def pageNotFound(e):
     return "The url doesnot exist."
-
-
 
 # -------------- Setting the API endpoints --------------- #
 
@@ -70,9 +73,11 @@ api.add_resource(TokenValidationAPI,'/api/tokenValidation/get')
 from api.data_summary import DataSummaryAPI
 api.add_resource(DataSummaryAPI,'/api/dataSummary/get')
 
+from api.exportAPI import ExportAPI
+api.add_resource(ExportAPI,'/api/exportData')
 
 
-
+from utils.celery.tasks import *
 
 if __name__ == '__main__':
     app.run()

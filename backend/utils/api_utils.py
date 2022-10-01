@@ -78,7 +78,7 @@ def validate_value(value,tracker_object):
     Different tracker can take different values. 
     This function checks if the value valid for the given tracker or not.
     '''
-    if tracker_object.tracker_type in ["Numeric","Time Duration"]:
+    if tracker_object.tracker_type in ["Numerical","Time Duration"]:
         for each in value:
             if not(each.isdigit() or ord(each)==ord('.')):
                 return False

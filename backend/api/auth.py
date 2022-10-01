@@ -38,17 +38,19 @@ class LoginUser(Resource):
             password = data['password']
         except:
             raise Error(status_code = 401, error_msg = api_errors["CTA/J"][1], error_code = api_errors["CTA/J"][0])
-
         if(email is not None and password is not None):
             user = User.query.filter_by(email=email).first()
             if user is not None:
-                if verify_password(password,user.password):
-                    jwt_token = generate_jwt_token(user)
-                    return jsonify({'jwt_token' : jwt_token})
+                if user.confirmed_at is not None:
+                    if verify_password(password,user.password):
+                        jwt_token = generate_jwt_token(user)
+                        return jsonify({'jwt_token' : jwt_token})
+                    else:
+                        raise Error(400,api_errors['INVPASS'][1],api_errors['INVPASS'][0])
                 else:
-                    raise Error(400,api_errors['INVPASS'],"INVPASS")
+                    raise Error(400,api_errors['USRNCon'][1],api_errors['USRNCon'][0])
             else:
-                raise Error(400,api_errors['USRNF'],"USRNF")
+                raise Error(400,api_errors['USRNF'][1],api_errors['USRNF'][0])       
         else:
-            raise Error(400,api_errors['MIDET'],"MIDET")
+            raise Error(400,api_errors['MIDET'][1],api_errors['MIDET'][0])
 

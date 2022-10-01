@@ -1,6 +1,7 @@
 from datetime import date
-from application.models import User
-from table_generator import TableCreator
+from utils.report_generator.table_generator import TableCreator
+import os
+from database.create_app import app
 
 class PDF(TableCreator):
     def footer(self):
@@ -90,7 +91,7 @@ def generate_PDF_report(user,type="Monthly"): # user object and type of report (
     data = getData(user)
     today = date.today()
     month, year = (today.month-1, today.year) if today.month != 1 else (12, today.year-1)
-    prev_month = today.replace(day=1, month=month, year=year)
+    prev_month = today.replace(day=today.day, month=month, year=year)
     title = "{0} report of {1} ".format(type,data["name"])
     subtitle = "{0} to {1}".format(prev_month,today)
 
@@ -111,8 +112,8 @@ def generate_PDF_report(user,type="Monthly"): # user object and type of report (
     for i in range(len(data['tracker_list'])):
         tracker_dict = data['tracker_list'][i]
         pdf.add_tracker_details(tracker_dict)
-
     
-
-    
-    pdf.output('report.pdf', 'F')
+    dir = app.config["SQLITE_DB_DIR"]
+    os.chdir(dir)
+    file_name = f'{data["email"]}_report.pdf'
+    pdf.output(file_name,'F')

@@ -7,13 +7,12 @@ def getDataSummary(user,key):
         'no_of_trackers' : len(tracker_list),
         "no_of_times_edited" : 0,
         "last_edited_date" : None,
-        "last_edited_time" : None
+        "last_edited_time" : None,
     }
 
     count = 0
     last_edited_timestamp = None
     for each in tracker_list:
-        print(each.last_edited,last_edited_timestamp)
         if each.last_edited and last_edited_timestamp is None:
             last_edited_timestamp = each.last_edited
         elif each.last_edited and last_edited_timestamp < each.last_edited:
