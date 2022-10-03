@@ -49,8 +49,8 @@ class LocalDevelopmentConfig(Config):
     MAIL_PORT = '465'
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
-    MAIL_USERNAME = "emailinflaskbyritik@gmail.com"
-    MAIL_PASSWORD = "podhjstbwoaxxjoc"
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
 
     ##### Flask Caching Config #####
     CACHE_TYPE = 'RedisCache'
