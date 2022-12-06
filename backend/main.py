@@ -8,19 +8,20 @@ from flask_cors import CORS
 from flask_restful import Api
 from utils.overridden.forms import ExtendedRegisterForm
 from database.cache import cache
-from database.celery import cel
+from database.celery_setting import cel
 from database.create_app import app
 from database.mail_create import mail
+import subprocess
 
 # --------------- Setting up the flask app --------------- #
 def create_app():
-    if(os.getenv("ENV","development")=="production"):
+    if(os.getenv("ENV","Development")=="Production"):
         print("----- Starting the production development -----")
         app.config.from_object(ProductionConfig) # Configures the ProductionConfig data with the app
     else:
         print("----- Starting the local development -----")
         app.config.from_object(LocalDevelopmentConfig) # Configures the LocalDevelopmentConfig data with the app
-    
+
     # Configuring Celery
     cel.conf.broker_url = app.config["BROKER"]
     cel.conf.result_backend = app.config["BACKEND"]
@@ -43,6 +44,7 @@ def create_app():
     security = Security(app,user_datastore,register_form=ExtendedRegisterForm)
     mail.init_app(app)
     app.app_context().push()
+
     return (app,api,mail,cache,cel)
 
 app,api,mail,cache,cel = create_app()
@@ -80,4 +82,6 @@ api.add_resource(ExportAPI,'/api/exportData')
 from utils.celery.tasks import *
 
 if __name__ == '__main__':
+    subprocess.Popen(['celery', '-A', 'main.cel', 'worker', '-l', 'info', '-P', 'threads'], shell = True)
+    subprocess.Popen(['celery', '-A', 'main.cel', 'beat', '--max-interval', '1', '-l', 'info'], shell = True)
     app.run()

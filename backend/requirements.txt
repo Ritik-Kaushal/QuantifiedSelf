@@ -8,3 +8,7 @@ flask-mail
 flask-caching
 redis
 celery
+fpdf2
+pyjwt
+importlib-metadata==4.13.0
+python-dotenv
