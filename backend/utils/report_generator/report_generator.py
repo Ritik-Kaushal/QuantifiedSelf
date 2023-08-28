@@ -1,7 +1,7 @@
 from datetime import date
 from utils.report_generator.table_generator import TableCreator
 import os
-from database.create_app import app
+from create_app import app
 
 class PDF(TableCreator):
     def footer(self):

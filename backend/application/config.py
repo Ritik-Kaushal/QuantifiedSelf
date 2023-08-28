@@ -1,18 +1,20 @@
 # -------------- IMPORTING THE REQUIRED MODULES --------------- #
 import os
-
-from sqlalchemy import true
+from dotenv import load_dotenv
+load_dotenv()
 
 # -------------- PATH OF BASE DIRECTORY --------------- #
-basedir = os.path.abspath(os.path.dirname(__file__)) # path of the base directory
-# It looks something like this => 'C:\\Users\\ritik\\Desktop\\QuantifiedSelf-II\\backend'
+CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+BASEDIR = os.path.abspath(os.path.join(CURRENT_DIR, os.pardir))
+
 
 # -------------- CONFIGURATION CLASSES --------------- #
 class Config():
     """
     Base class for some common configurations of the Flask App.
     """
-
+    CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+    BASEDIR = os.path.abspath(os.path.join(CURRENT_DIR, os.pardir))
     DEBUG = False
     SQLITE_DB_DIR = None
     SQLALCHEMY_DATABASE_URI = None
@@ -29,7 +31,7 @@ class LocalDevelopmentConfig(Config):
     DEBUG = True
 
     ##### Database Config #####
-    SQLITE_DB_DIR = os.path.join(basedir, '../database')
+    SQLITE_DB_DIR = os.path.join(CURRENT_DIR, '../database')
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(SQLITE_DB_DIR, "QuantifiedSelfDevelopment.sqlite3")
 
     ##### Flask Security Config #####
@@ -73,7 +75,7 @@ class ProductionConfig(Config):
     """
 
     ##### Database Config #####
-    SQLITE_DB_DIR = os.path.join(basedir, '../database')
+    SQLITE_DB_DIR = os.path.join(BASEDIR, '../database')
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(SQLITE_DB_DIR, "QuantifiedSelfProduction.sqlite3")
 
     ##### Flask Security Config #####

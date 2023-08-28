@@ -1,4 +1,4 @@
-from database.cache import cache
+from instances.cache import cache
 from utils.api_utils import Error,duplicateTracker,validate,CommaSeparated,lastEdited,latestValue
 
 def getDataSummary(user,key):

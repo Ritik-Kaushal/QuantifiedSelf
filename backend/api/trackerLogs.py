@@ -3,14 +3,14 @@ from sqlite3 import Timestamp
 from flask_restful import Resource
 from utils.api_utils import Error,validate_timestamp,validate_value
 from application.models import Tracker, TrackerLogs
-from database.database_config import db
+from instances.database_config import db
 import json
 from utils.global_data import api_errors
 from utils.jwt_token_utils import token_required
 from flask import request,make_response
 import datetime
 from utils.api_cache import getLogs
-from database.cache import cache
+from instances.cache import cache
 from utils.api_utils import delete_cache
 
 # --------------Tracker Logs API Class--------------

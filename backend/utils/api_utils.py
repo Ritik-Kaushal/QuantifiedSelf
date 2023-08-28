@@ -5,7 +5,7 @@ from flask import make_response
 from utils.global_data import notAllowedCharacters
 from application.models import Tracker
 import datetime
-from database.cache import cache
+from instances.cache import cache
 
 # -------------- Error Class -------------- #
 

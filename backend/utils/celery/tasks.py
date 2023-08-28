@@ -1,4 +1,4 @@
-from database.celery_setting import cel
+from instances.celery_setting import cel
 
 # -------------- Setting Celery Tasks --------------- #
 from celery.schedules import crontab
@@ -6,7 +6,7 @@ from celery.schedules import crontab
 @cel.on_after_configure.connect
 def setup_periodic_tasks(sender,**kwargs):
     sender.add_periodic_task(crontab(hour=18, minute=0),remainder_emails.s(),name="A remainder email to all those who have not updated the logs today")
-    sender.add_periodic_task(10,email_reports.s(),name="A report is emailed to all the users.")
+    sender.add_periodic_task(crontab(hour=10, minute=0,day_of_month=1),email_reports.s(),name="A report is emailed to all the users.")
 
 
 from utils.mail_sender.remainder_mail import send_remainder_emails

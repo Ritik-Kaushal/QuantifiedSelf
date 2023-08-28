@@ -10,6 +10,8 @@ import jwt
 from datetime import datetime,timedelta
 from application.config import LocalDevelopmentConfig,ProductionConfig
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 secret_key=None
 if(os.getenv("ENV","development")=="production"):
@@ -30,9 +32,8 @@ def token_required(f):
         token = None
 
         # jwt is passed in the request header
-        if 'jwt_token' in request.headers:
-            token = request.headers['jwt_token']
-        print(token)
+        if 'Authorization' in request.headers:
+            token = request.headers['Authorization'].split("Bearer ")[1]
         # return 401 if token is not passed
         if not token:
             error = {

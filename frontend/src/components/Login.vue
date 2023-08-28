@@ -10,51 +10,29 @@
           {{ error_message }}
         </div>
         <div class="form-outline mb-4 input-part">
-          <input
-            type="email"
-            class="form-control"
-            placeholder="Email address"
-            v-model="email"
-          />
+          <input type="email" class="form-control" placeholder="Email address" v-model="email" />
           <div class="error" v-if="email_error">Email is required !!!</div>
         </div>
 
         <div class="form-outline mb-4 input-part">
-          <input
-            type="password"
-            class="form-control"
-            placeholder="Password"
-            v-model="password"
-          />
-          <div class="error" v-if="password_error"
-            >Password cannot be empty !!!</div
-          >
+          <input type="password" class="form-control" placeholder="Password" v-model="password" />
+          <div class="error" v-if="password_error">Password cannot be empty !!!</div>
         </div>
 
         <div class="text-center pt-1 mb-5 pb-1">
-          <button
-            @click="login($event)"
-            class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
-            type="button"
-            id="login_button"
-          >
+          <button @click="login($event)" class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="button"
+            id="login_button">
             Log in
           </button>
           <br />
-            <router-link to="/home/reset"
-              >Forgot Password ?
-            </router-link>
+          <router-link to="/home/reset">Forgot Password ?
+          </router-link>
         </div>
 
-        <div
-          class="d-grid align-items-center justify-content-center pb-4"
-          id="custom-create-part"
-        >
+        <div class="d-grid align-items-center justify-content-center pb-4" id="custom-create-part">
           <p class="mb-0 me-2">Don't have an account?</p>
           <button type="button" class="btn btn-outline-danger">
-            <router-link to="/home/register"
-              >Register</router-link
-            >
+            <router-link to="/home/register">Register</router-link>
           </button>
         </div>
       </form>
@@ -101,7 +79,6 @@ export default {
         .then((data) => {
           const jwt_token = data["jwt_token"];
           localStorage.setItem("jwt_token", jwt_token);
-          console.log("Token Set");
           this.$store.commit("login");
           this.loading = false;
           this.$router.push({ name: "Dashboard" });
@@ -150,25 +127,30 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .input-part {
   display: grid;
 }
+
 .login-header {
   margin-top: 2rem;
   font-weight: 500;
   margin: 2rem auto;
   text-align: center;
 }
+
 a {
   text-decoration: none;
   color: black;
 }
+
 .error {
   align-items: center;
   justify-content: center;
   width: 100%;
   color: red;
 }
+
 .alert {
   padding-top: 4px;
   padding-bottom: 4px;

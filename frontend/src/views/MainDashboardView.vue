@@ -1,8 +1,8 @@
 <template>
-  <div >
-      <DashboardNavbar />
-      <router-view class="router-view-div" />
-    
+  <div>
+    <DashboardNavbar />
+    <router-view class="router-view-div" />
+
   </div>
 </template>
 
@@ -15,11 +15,11 @@ export default {
   components: {
     DashboardNavbar,
   },
-  mounted(){
-    if(this.$store.getters.get_login_status && validateToken()){
+  mounted() {
+    if (this.$store.getters.get_login_status && validateToken()) {
       this.$store.dispatch("getTrackers");
     }
-    else{
+    else {
       this.$store.dispatch("logoutUser");
     }
   }
@@ -27,15 +27,15 @@ export default {
 </script>
 
 <style scoped>
-.router-view-div{
+.router-view-div {
   position: relative;
-  top:56px;
-  margin:5px 5px 5px 5px;
+  top: 56px;
+  margin: 5px 5px 5px 5px;
 }
 
 @media (min-width: 800px) {
-  .router-view-div{
-    margin-left:275px;
+  .router-view-div {
+    margin-left: 275px;
   }
 }
 </style>

@@ -1,17 +1,20 @@
 # -------------- IMPORTING THE REQUIRED MODULES --------------- #
 import os
 from application.config import *
-from database.database_config import db
+from instances.database_config import db
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from application.models import User, Role
 from flask_cors import CORS
 from flask_restful import Api
 from utils.overridden.forms import ExtendedRegisterForm
-from database.cache import cache
-from database.celery_setting import cel
-from database.create_app import app
-from database.mail_create import mail
-import subprocess
+from instances.cache import cache
+from instances.celery_setting import cel
+from create_app import app
+from instances.mail_create import mail
+
+from dotenv import load_dotenv
+load_dotenv()
+
 
 # --------------- Setting up the flask app --------------- #
 def create_app():
@@ -49,6 +52,18 @@ def create_app():
 
 app,api,mail,cache,cel = create_app()
 
+# def initializeDatabase():
+#     with app.app_context():
+#         inspector = db.inspect(db.engine)
+#         table_names = inspector.get_table_names()
+
+#         if not table_names: 
+#             # If no tables exist
+#             db.create_all()
+#             print("Database tables created.")
+#         else:
+#             pass
+
 @app.route('/recovered')
 def post_recovery():
     return "Successfully Recovered. Close this tab and login again."
@@ -82,6 +97,5 @@ api.add_resource(ExportAPI,'/api/exportData')
 from utils.celery.tasks import *
 
 if __name__ == '__main__':
-    subprocess.Popen(['celery', '-A', 'main.cel', 'worker', '-l', 'info', '-P', 'threads'], shell = True)
-    subprocess.Popen(['celery', '-A', 'main.cel', 'beat', '--max-interval', '1', '-l', 'info'], shell = True)
-    app.run()
+    # initializeDatabase()
+    app.run(port=5000)

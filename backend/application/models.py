@@ -1,6 +1,7 @@
-from database.database_config import db
+from instances.database_config import db
 from flask_security import UserMixin, RoleMixin
 import datetime
+
 class Roles_Users(db.Model):
     """
     Class that defines which user has which roles associated with himself/herself.

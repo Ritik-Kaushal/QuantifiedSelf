@@ -1,10 +1,8 @@
 import csv
 import os
-from database.create_app import app
+from create_app import app
 
 def convert_to_csv(user):
-    dir = app.config["SQLITE_DB_DIR"]
-    os.chdir(dir)
     tracker_list = user.trackers
     file_list = []
     for tracker in tracker_list:

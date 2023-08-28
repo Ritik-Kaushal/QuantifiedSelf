@@ -1,4 +1,7 @@
 import store from "./store/store"
+import axios from 'axios'
+
+
 async function FetchFunction({ url, init_obj, authRequired }) {
   if (url === undefined) {
     throw Error('Url required')
@@ -15,25 +18,29 @@ async function FetchFunction({ url, init_obj, authRequired }) {
   if (authRequired === true) {
     if (init_obj.headers === undefined) {
       init_obj.headers = {
-        'jwt_token': store.getters.jwt_token
+        'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+
       }
     } else {
-      init_obj.headers['jwt_token'] = store.getters.jwt_token
+      init_obj.headers['Authorization'] = `Bearer ${localStorage.getItem('jwt_token')}`
     }
   }
+
   console.log(init_obj)
+
   const response = await fetch(url, init_obj).catch(() => {
     throw Error('Network Error')
   })
+
   if (response) {
-    if(response.ok) {
+    if (response.ok) {
       const data = await response.json().catch(() => {
         throw Error('Unexpected Response')
       })
       if (data) {
         return data
       }
-    } 
+    }
     else {
       let error = await response.text()
       throw new Error(error)

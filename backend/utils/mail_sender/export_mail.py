@@ -12,14 +12,15 @@ def export_data_and_mail(user_id):
             if len(file_list)!=0:
                 zip_file_path = zip_files(user.id,file_list)
                 if zip_file_path:
+                    print(zip_file_path)
                     out = sendMail(RECEIVER_ADDRESS= user.email,SUBJECT= "Your Exported Data", MESSAGE= "Here is the exported data attached.",ATTACHMENT = zip_file_path,mime_type="application/x-zip")
                     if not out:
-                        return (False,"Couldnot send the email")
+                        return (False,"Could not send the email")
                     else:
                         return (True, "Successfully exported and sent the email.")
                 else:
-                    return (False, "Couldnot convert to zip")
+                    return (False, "Could not convert to zip")
             else:
-                return (False, "Couldnot convert to csv")
+                return (False, "Could not convert to csv")
     else:
         return (False,"User not found")

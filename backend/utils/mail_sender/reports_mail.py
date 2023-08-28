@@ -3,7 +3,7 @@ from application.models import User
 from utils.mail_sender.mail import sendMail
 import os
 import time
-from database.create_app import app
+from create_app import app
 
 def send_reports_emails_all():
     dir = app.config["SQLITE_DB_DIR"]
