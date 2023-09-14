@@ -1,115 +1,50 @@
 <template>
   <div>
-    <nav
-      class="navbar navbar-expand-lg navbar-light"
-      style="background-color: #b0d4ee"
-    >
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #b0d4ee">
       <div class="container-fluid">
-        <img
-          src="@/assets/logo.jpg"
-          alt=""
-          width="30"
-          height="25"
-          class="d-inline-block align-text-top"
-        />
+        <img src="@/assets/logo.jpg" alt="" width="30" height="25" class="d-inline-block align-text-top" />
         <div class="name">
           <strong>Track It</strong>
         </div>
 
-        <button
-          id="menu-id"
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
+        <button id="menu-id" class="navbar-toggler" type="button" data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+          aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul
-            class="small-screen-nav nav-item-hover nav nav-pills navbar-nav me-auto mb-2 mb-lg-0"
-          >
+          <ul class="small-screen-nav nav-item-hover nav nav-pills navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item ml-1 mx-1 nav-item-highlight">
-              <router-link
-                @click.native="reset"
-                class="nav-link"
-                aria-current="page"
-                to="/home"
-                >Home</router-link
-              >
+              <router-link @click.native="reset" class="nav-link" aria-current="page" to="/home">Home</router-link>
             </li>
 
             <li class="nav-item ml-1 mx-1 nav-item-highlight">
-              <router-link
-                @click.native="closeToggle"
-                class="nav-link"
-                aria-current="page"
-                to="/faqs"
-                >Faqs</router-link
-              >
-            </li>
-
-            <li class="nav-item ml-1 mx-1 nav-item-highlight">
-              <router-link
-                @click.native="closeToggle"
-                class="nav-link"
-                aria-current="page"
-                to="/acknowledgements"
-                >Acknowledgements</router-link
-              >
+              <router-link @click.native="closeToggle" class="nav-link" aria-current="page" to="/faqs">Faqs</router-link>
             </li>
           </ul>
 
           <div v-if="loggedIn">
             <div class="mx-2">
-              <ul
-                class="small-screen-nav nav-item-hover nav nav-pills navbar-nav me-auto mb-2 mb-lg-0"
-              >
-                <li
-                  class="btn-outline-danger nav-item ml-1 mx-1 nav-button-highlight"
-                >
-                  <router-link
-                    @click.native="closeToggle"
-                    class="nav-link"
-                    aria-current="page"
-                    to="/dashboard"
-                    >Go to Dashboard</router-link
-                  >
+              <ul class="small-screen-nav nav-item-hover nav nav-pills navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="btn-outline-danger nav-item ml-1 mx-1 nav-button-highlight">
+                  <router-link @click.native="closeToggle" class="nav-link" aria-current="page" to="/dashboard">Go to
+                    Dashboard</router-link>
                 </li>
               </ul>
             </div>
           </div>
           <div v-else>
             <div class="mx-2">
-              <ul
-                class="small-screen-nav nav-item-hover nav nav-pills navbar-nav me-auto mb-2 mb-lg-0"
-              >
-                <li
-                  class="btn-outline-danger nav-item ml-1 mx-1 nav-button-highlight"
-                >
-                  <router-link
-                    @click.native="addClass"
-                    class="nav-link"
-                    aria-current="page"
-                    to="/home/login"
-                    >Login</router-link
-                  >
+              <ul class="small-screen-nav nav-item-hover nav nav-pills navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="btn-outline-danger nav-item ml-1 mx-1 nav-button-highlight">
+                  <router-link @click.native="addClass" class="nav-link" aria-current="page"
+                    to="/home/login">Login</router-link>
                 </li>
 
-                <li
-                  class="btn-outline-danger nav-item ml-1 mx-1 nav-button-highlight"
-                >
-                  <router-link
-                    @click.native="addClass"
-                    class="nav-link"
-                    aria-current="page"
-                    to="/home/register"
-                    >Register</router-link
-                  >
+                <li class="btn-outline-danger nav-item ml-1 mx-1 nav-button-highlight">
+                  <router-link @click.native="addClass" class="nav-link" aria-current="page"
+                    to="/home/register">Register</router-link>
                 </li>
               </ul>
             </div>
@@ -125,7 +60,7 @@ import validateToken from "../utils/validateToken";
 export default {
   name: "TopNavBar",
   mounted() {
-    if(validateToken()){
+    if (validateToken()) {
       if (
         window.location.pathname === "/home/login" ||
         window.location.pathname === "/home/register"
@@ -133,10 +68,10 @@ export default {
         this.addClass();
       }
     }
-    else{
+    else {
       this.$store.dispatch('logoutUser');
     }
-    
+
   },
   data() {
     return {
@@ -183,6 +118,7 @@ export default {
   border: 1.5px solid #dc3545;
   border-radius: 8px;
 }
+
 .nav-button-highlight a.router-link-exact-active {
   background-color: #dc3545;
 }

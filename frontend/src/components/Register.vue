@@ -1,71 +1,36 @@
 <template>
   <div class="register-part" ref="scroll">
     <div v-if="loading">
-      <p class="register-part"><strong>Registering... Please  Wait</strong></p>
+      <p class="register-part"><strong>Registering... Please Wait</strong></p>
     </div>
     <div v-else>
       <form>
         <p class="register-header"><strong>Create an Account</strong></p>
-        <div class="alert alert-danger error" role="alert" v-if="api_error">{{error_message}}</div>
+        <div class="alert alert-danger error" role="alert" v-if="api_error">{{ error_message }}</div>
         <div class="form-outline mb-4 input-part">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Name"
-            v-model="name"
-          />
+          <input type="text" class="form-control" placeholder="Name" v-model="name" />
           <span class="error" v-if="name_error">Name is required !!!</span>
         </div>
         <div class="form-outline mb-4 input-part">
-          <input
-            type="email"
-            class="form-control"
-            placeholder="Email address"
-            v-model="email"
-          />
+          <input type="email" class="form-control" placeholder="Email address" v-model="email" />
           <span class="error" v-if="email_error">Email is required !!! </span>
         </div>
         <div class="form-outline mb-4 input-part">
-          <input
-            type="password"
-            class="form-control"
-            placeholder="Password"
-            v-model="password"
-          />
+          <input type="password" class="form-control" placeholder="Password" v-model="password" />
           <span class="error" v-if="password_error">Password cannot be empty !!! </span>
         </div>
 
         <div class="form-outline mb-4 input-part">
-          <input
-            type="password"
-            class="form-control"
-            placeholder="Re-enter Password"
-            v-model="re_password"
-          />
+          <input type="password" class="form-control" placeholder="Re-enter Password" v-model="re_password" />
           <span class="error" v-if="re_password_error">Both the passwords must match !!!</span>
         </div>
 
         <div class="text-center pt-1 mb-5 pb-1">
-          <button
-            @click="register($event)"
-            class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
-            type="button"
-            id="register_button"
-          >
+          <button @click="register($event)" class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="button"
+            id="register_button">
             Create Account
           </button>
           <br />
-        </div>
-        <div
-          class="d-grid align-items-center justify-content-center pb-4"
-          id="custom-create-part"
-        >
-          <p class="mb-0 me-2">Already have an account?</p>
-          <button type="button" class="btn btn-outline-danger">
-            <router-link @click.native="addClass" to="/home/login"
-              >Login</router-link
-            >
-          </button>
         </div>
       </form>
     </div>
@@ -85,16 +50,16 @@ export default {
   data() {
     return {
       loading: false,
-      api_error : false,
-      error_message : "",
+      api_error: false,
+      error_message: "",
       email: "",
-      email_error : false,
+      email_error: false,
       password: "",
-      password_error : false,
+      password_error: false,
       re_password: "",
-      re_password_error : false,
+      re_password_error: false,
       name: "",
-      name_error : false
+      name_error: false
     };
   },
   methods: {
@@ -148,47 +113,47 @@ export default {
         });
     },
   },
-  watch : {
-    name(){
-      if(this.name.trim() == ""){
+  watch: {
+    name() {
+      if (this.name.trim() == "") {
         this.name_error = true
         document.getElementById("register_button").disabled = true;
 
       }
-      else{
+      else {
         this.name_error = false
         document.getElementById("register_button").disabled = false;
       }
     },
-    email(){
-      if(this.email.trim() == ""){
+    email() {
+      if (this.email.trim() == "") {
         this.email_error = true
         document.getElementById("register_button").disabled = true;
 
       }
-      else{
+      else {
         this.email_error = false
         document.getElementById("register_button").disabled = false;
       }
     },
-    password(){
-      if(this.password.trim() == ""){
+    password() {
+      if (this.password.trim() == "") {
         this.password_error = true
         document.getElementById("register_button").disabled = true;
 
       }
-      else{
+      else {
         this.password_error = false
         document.getElementById("register_button").disabled = false;
       }
     },
-   re_password(){
-      if(this.re_password.trim() == "" || this.re_password != this.password){
+    re_password() {
+      if (this.re_password.trim() == "" || this.re_password != this.password) {
         this.re_password_error = true
         document.getElementById("register_button").disabled = true;
 
       }
-      else{
+      else {
         this.re_password_error = false
         document.getElementById("register_button").disabled = false;
       }
@@ -205,23 +170,26 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .register-part {
   display: grid;
 }
+
 .register-header {
   margin-top: 2rem;
   font-weight: 500;
   margin: 2rem auto;
   text-align: center;
 }
+
 a {
   text-decoration: none;
   color: black;
 }
-.error{
+
+.error {
   display: flex;
   position: relative;
-  color : red
+  color: red
 }
-
 </style>

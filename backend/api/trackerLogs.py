@@ -74,6 +74,7 @@ class TrackerLogsAPI(Resource):
                     time_stamp = None
                     if 'time_stamp' in data and data['time_stamp'] is not None and len(str(data['time_stamp']).strip())!=0:
                         time_stamp = data['time_stamp']
+                        print(time_stamp)
                         if not validate_timestamp(time_stamp) :
                             raise Error(status_code = 400, error_msg = api_errors["TSWF"][1], error_code = api_errors["TSWF"][0])
                     elif 'time_stamp' not in data:

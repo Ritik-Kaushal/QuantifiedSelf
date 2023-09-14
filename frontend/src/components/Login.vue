@@ -28,13 +28,6 @@
           <router-link to="/home/reset">Forgot Password ?
           </router-link>
         </div>
-
-        <div class="d-grid align-items-center justify-content-center pb-4" id="custom-create-part">
-          <p class="mb-0 me-2">Don't have an account?</p>
-          <button type="button" class="btn btn-outline-danger">
-            <router-link to="/home/register">Register</router-link>
-          </button>
-        </div>
       </form>
     </div>
   </div>

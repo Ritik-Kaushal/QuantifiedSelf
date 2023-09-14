@@ -18,10 +18,16 @@ class ExportAPI(Resource):
         '''
         user = kwargs['user']
         res = export_data.delay(user.id)
-        while not res.ready():
+        count = 0
+        while not res.ready() and count<5:
             print("Still in progress")
             time.sleep(2)
-        if not res.get()[0] : 
+            count = count + 1
+        
+        print(count)
+        if count >= 5:
+            return make_response(json.dumps({"message" : "Timed out. Please try again"}),400)
+        elif not res.get()[0] : 
             return make_response(json.dumps({"message" : res.get()[1]}),400)
         else:
             return make_response(json.dumps({"message" : res.get()[1]}),200)

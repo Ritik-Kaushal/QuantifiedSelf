@@ -7,6 +7,10 @@
 <script>
 export default {
   name: "App",
+
+  created() {
+    document.title = 'Quantified Self'; // Set the page title
+  },
 };
 </script>
 

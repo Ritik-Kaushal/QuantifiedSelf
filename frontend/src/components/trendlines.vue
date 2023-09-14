@@ -42,7 +42,7 @@ export default {
     },
     addNoTrendlineImage(tracker_name) {
       let templateString =
-        '<div class="col-md-6 mb-3" <div class="card text-dark bg-light mb-3 h-100 text-center" style="max-width: 100rem;"> <div class="card-body"> No Data is Available for' +
+        '<div class="col-md-6 mb-3" <div class="card text-dark bg-light mb-3 h-100 text-center" style="max-width: 100rem;"> <div class="card-body"> No Data is Available for ' +
         tracker_name +
         "</div> </div> </div>";
       $("#trendlines").append(templateString);
